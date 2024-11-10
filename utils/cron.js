@@ -1,4 +1,5 @@
 const cron = require("node-cron");
+const SupportRequest = require("../models/SupportRequest");
 
 exports.init = () => {
   cron.schedule("0 0 * * *", async () => {

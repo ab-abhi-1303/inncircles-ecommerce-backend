@@ -6,14 +6,13 @@ require("dotenv").config();
 const cors = require("cors");
 const http = require("http");
 const cronHelper = require("./utils/cron")
-const SupportRequest = require("./models/SupportRequest");
 
 const app = express();
 const server = http.createServer(app);
 connectDB();
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({origin: "*"}));
 app.options("*", cors());
 app.use("/api", require("./routes/api"));
 
@@ -21,14 +20,13 @@ cronHelper.init();
 
 const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:4200",
+      origin: "*",
       methods: ["GET", "POST"]
     }
   });
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
+  console.log("Socket connected:", socket.id);
   socket.on("joinRoom", ({ supportRequestId }) => {
     socket.join(supportRequestId);
     console.log(`User joined room: ${supportRequestId}`);
