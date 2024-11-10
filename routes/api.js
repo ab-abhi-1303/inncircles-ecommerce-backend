@@ -8,7 +8,7 @@ const requestController = require("../controllers/requestController");
 router.post("/login", authController.login);
 
 router.get("/users", userController.getUsers);
-router.put("/users/assign-role", auth(["Admin"]), userController.assignRole);
+router.put("/users/assign-role", userController.assignRole);
 
 // Support Request Operations
 router.post("/requests/create", auth(["Customer"]), requestController.createRequest);
