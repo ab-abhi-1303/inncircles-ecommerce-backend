@@ -22,3 +22,15 @@ exports.getUsers = async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 }
+
+
+exports.addUser = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = new User({ username, password, role: 'Customer' });
+        await user.save();
+        res.json({username: user.username});
+    } catch (err) {
+        res.status(500).json({ msg: 'Server error' });
+    }
+}

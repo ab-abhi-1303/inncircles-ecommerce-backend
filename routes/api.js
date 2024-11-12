@@ -8,6 +8,7 @@ const requestController = require("../controllers/requestController");
 router.post("/login", authController.login);
 
 router.get("/users", userController.getUsers);
+router.post("/users/add", userController.addUser);
 router.put("/users/assign-role", userController.assignRole);
 
 // Support Request Operations
