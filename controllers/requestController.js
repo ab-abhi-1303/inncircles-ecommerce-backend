@@ -25,16 +25,28 @@ exports.getRequests = async (req, res) => {
   const userDetails = await User.findById(userId);
   try {
     if (!userDetails) return res.status(404).json({ msg: "User not found" });
+    let results;
     if (userDetails.role === "Support Engineer") {
-      const results = await SupportRequest.find({ supportEngineerId: userId });
-      res.json(results);
+      results = await SupportRequest.find({ supportEngineerId: userId });
     } else if (userDetails.role === "Customer") {
-      const results = await SupportRequest.find({ customerId: userId });
-      res.json(results);
+      results = await SupportRequest.find({ customerId: userId });
     } else {
-      const results = await SupportRequest.find();
-      res.json(results);
+      results = await SupportRequest.find();
     }
+    results = await Promise.all(
+      results.map(async (result) => {
+        const customerDetails = await User.findOne({
+          _id: result.customerId,
+        });
+        return {
+          ...result.toObject(),
+          customerUsername: customerDetails.username,
+        };
+      })
+    );
+    console.log("resultss", results);
+
+    res.json(results);
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
@@ -58,8 +70,8 @@ exports.deleteRequest = async (req, res) => {
   try {
     const request = await SupportRequest.findByIdAndDelete(requestId);
     if (!request) return res.status(404).json({ msg: "Request not found" });
-    res.json('Deleted request successfully');
+    res.json("Deleted request successfully");
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
-}
+};
