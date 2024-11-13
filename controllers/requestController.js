@@ -44,7 +44,6 @@ exports.getRequests = async (req, res) => {
         };
       })
     );
-    console.log("resultss", results);
 
     res.json(results);
   } catch (err) {
